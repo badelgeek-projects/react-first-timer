@@ -1,0 +1,17 @@
+.btn {
+  background-color: tomato;
+  border: none;
+  border-radius: 10px;
+  color: bisque;
+  font-size: 2rem;
+  padding: 8px;
+  width: 10%;
+}
+
+.btn:hover {
+  background-color: red;
+}
+
+.btn:active {
+  background-color: chocolate;
+}
