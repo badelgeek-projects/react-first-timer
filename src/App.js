@@ -1,4 +1,4 @@
-import { Component, Fragment } from "react";
+import { Component } from "react";
 import Title from "./Title";
 import Chrono from "./Chrono";
 import style from "./Style.module.css";
@@ -8,7 +8,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      timer: 0,
+      timer: 58,
       isTimerStarted: false,
       interval: null,
     };
@@ -25,9 +25,9 @@ class App extends Component {
   startTimer = () => {
     const intervala = setInterval(() => {
       this.setState((state) => ({
-        timer: ++state.timer,
+        timer: state.timer + 0.01,
       }));
-    }, 1000);
+    }, 10);
 
     this.setState({
       interval: intervala,
@@ -39,20 +39,20 @@ class App extends Component {
     clearInterval(this.state.interval);
     this.setState({
       interval: null,
-      isTimerStarted: true,
+      isTimerStarted: false,
       timer: 0,
     });
   };
 
+  getTimer = () => this.state.timer.toFixed(2);
+
   render() {
     return (
-      <>
-        <div className={style.alignCenter}>
-          <Title>Pomodoro Timer {this.state.timer}</Title>
-          <Chrono timer={this.state.timer} />
-          <Button onClick={this.handleTimer}>Start</Button>
-        </div>
-      </>
+      <div className={style.center}>
+        <Title>Pomodoro Timer {this.getTimer()}</Title>
+        <Chrono timer={this.state.timer} />
+        <Button onClick={this.handleTimer}>{!this.state.isTimerStarted ? "Start" : "Stop"}</Button>
+      </div>
     );
   }
 }
