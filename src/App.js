@@ -1,57 +1,35 @@
 import { Component } from "react";
+import Timer from "./Timer";
+import Timerdata from "./Timerdata";
 import Title from "./Title";
-import Chrono from "./Chrono";
 import style from "./Style.module.css";
-import Button from "./Button";
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      timer: 58,
-      isTimerStarted: false,
-      interval: null,
+      timerDatas: [],
     };
   }
 
-  handleTimer = () => {
-    if (!this.state.isTimerStarted) {
-      this.startTimer();
-    } else {
-      this.resetTimer();
-    }
+  addTimerData = (timer, isPaused = false) => {
+    const timerData = {
+      date: new Date(),
+      timer,
+      state: isPaused ? "PAUSE" : "STEP",
+    };
+    this.setState((state) => ({
+      timerDatas: [...state.timerDatas, timerData],
+    }));
   };
-
-  startTimer = () => {
-    const intervala = setInterval(() => {
-      this.setState((state) => ({
-        timer: state.timer + 0.01,
-      }));
-    }, 10);
-
-    this.setState({
-      interval: intervala,
-      isTimerStarted: true,
-    });
-  };
-
-  resetTimer = () => {
-    clearInterval(this.state.interval);
-    this.setState({
-      interval: null,
-      isTimerStarted: false,
-      timer: 0,
-    });
-  };
-
-  getTimer = () => this.state.timer.toFixed(2);
 
   render() {
     return (
       <div className={style.center}>
-        <Title>Pomodoro Timer {this.getTimer()}</Title>
-        <Chrono timer={this.state.timer} />
-        <Button onClick={this.handleTimer}>{!this.state.isTimerStarted ? "Start" : "Stop"}</Button>
+        <Title>Pomodoro Timer</Title>
+        <Timer addTimerData={this.addTimerData} />
+
+        <Timerdata timerDatas={this.state.timerDatas} />
       </div>
     );
   }
