@@ -1,12 +1,12 @@
 import { Component } from "react";
 import { secondsToTime } from "./utils/time";
+import style from "./Style.module.css";
 
 const css = {
   table: {
     color: "black",
-    display: "flex",
-    justifyContent: "center",
     borderCollapse: "collapse",
+    margin: "0 auto",
   },
   cell: {
     border: "1px solid gray",
@@ -26,13 +26,13 @@ const formatTimer = (timer) => {
 class Timerdata extends Component {
   displayTimerDatas() {
     return (
-      <div>
+      <div className={style.center}>
         <table style={css.table}>
           <thead>
             <tr key="thead">
               <th style={css.cell}>Date</th>
               <th style={css.cell}>Timer</th>
-              <th style={css.cell}>State</th>
+              <th style={{ ...css.cell, width: "25%" }}>State</th>
             </tr>
           </thead>
           <tbody>

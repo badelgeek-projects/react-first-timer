@@ -2,6 +2,7 @@
   text-align: center;
 }
 
-.text {
-  color: red;
+h1,
+p {
+  margin: 0;
 }
