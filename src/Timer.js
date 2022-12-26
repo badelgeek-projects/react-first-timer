@@ -1,75 +1,72 @@
-import { Component } from "react";
+import { useState } from "react";
 import Button from "./Button";
 import { secondsToTime } from "./utils/time";
+import style from "./Timer.module.css";
 
-class Timer extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      timer: 0,
-      isTimerStarted: false,
-      isTimerPaused: false,
-      interval: null,
-    };
-  }
+const createTimer = () => {
+  return {
+    value: 0,
+    isTimerStarted: false,
+    isTimerPaused: false,
+    interval: null,
+  };
+};
 
-  handleStartStopTimer = () => {
-    if (!this.state.isTimerStarted && !this.state.isTimerPaused) {
-      this.startTimer();
-      this.handleAddTimerData();
+const Timer = (props) => {
+  const [timer, setTimer] = useState(createTimer);
+
+  const handleStartStopTimer = () => {
+    if (!timer.isTimerStarted && !timer.isTimerPaused) {
+      startTimer();
+      handleAddTimerData();
     } else {
-      this.resetTimer();
+      resetTimer();
     }
   };
 
-  startTimer = () => {
-    const intervale = setInterval(() => {
-      this.setState((state) => ({
-        timer: state.timer + 0.01,
+  const startTimer = () => {
+    const interval = setInterval(() => {
+      setTimer((t) => ({
+        ...t,
+        value: t.value + 0.01,
       }));
     }, 10);
 
-    this.setState({
-      interval: intervale,
+    setTimer({
+      ...timer,
+      interval: interval,
       isTimerStarted: true,
       isTimerPaused: false,
     });
   };
 
-  handleAddTimerData = () => {
-    if (this.isTimerRunning()) {
-      this.props.addTimerData(this.state.timer);
+  const handleAddTimerData = () => {
+    if (isTimerRunning()) {
+      props.addTimerData(timer.value);
     }
   };
 
-  resetTimer = () => {
-    this.state.interval && clearInterval(this.state.interval);
-    this.setState({
-      interval: null,
-      isTimerStarted: false,
-      isTimerPaused: false,
-      timer: 0,
-      timerData: [],
-    });
+  const resetTimer = () => {
+    timer.interval && clearInterval(timer.interval);
+    setTimer(createTimer());
   };
 
-  handlePauseRestartTimer = () => {
-    if (this.isTimerRunning()) {
-      this.state.interval && clearInterval(this.state.interval);
-      this.setState({
+  const handlePauseRestartTimer = () => {
+    if (isTimerRunning()) {
+      setTimer({
+        ...timer,
         isTimerPaused: true,
       });
-      this.props.addTimerData(this.state.timer, true);
+      timer.interval && clearInterval(timer.interval);
+      props.addTimerData(timer.value, true);
     } else {
-      this.startTimer();
+      startTimer();
     }
   };
 
-  isTimerRunning = () => this.state.isTimerStarted && !this.state.isTimerPaused;
+  const isTimerRunning = () => timer.isTimerStarted && !timer.isTimerPaused;
 
-  getTimer = () => this.state.timer.toFixed(2);
-
-  formatTimer = (timeInSeconds) => {
+  const formatTimer = (timeInSeconds) => {
     const { h, m, s, ms } = secondsToTime(timeInSeconds);
 
     return (
@@ -85,22 +82,23 @@ class Timer extends Component {
     );
   };
 
-  render() {
-    return (
-      <>
-        <div>{this.formatTimer(this.state.timer)}</div>
-        <div style={{ marginBottom: 36 }}>
-          <Button onClick={this.handleStartStopTimer}>
-            {this.state.isTimerStarted ? "Stop" : "Start"}
-          </Button>
-          <Button onClick={this.handleAddTimerData}>+</Button>
-          <Button onClick={this.handlePauseRestartTimer}>
-            {this.isTimerRunning() ? "Pause" : "Restart"}
-          </Button>
-        </div>
-      </>
-    );
-  }
-}
+  return (
+    <>
+      <div>{formatTimer(timer.value)}</div>
+      <div className={style["progress-wrapper"]}>
+        <div
+          className={style["progress-bar"]}
+          style={{ width: `${((timer.value % 60) * 100) / 60}%` }}
+        ></div>
+      </div>
+
+      <div style={{ marginBottom: 36 }}>
+        <Button onClick={handleStartStopTimer}>{timer.isTimerStarted ? "Reset" : "Start"}</Button>
+        <Button onClick={handleAddTimerData}>+</Button>
+        <Button onClick={handlePauseRestartTimer}>{isTimerRunning() ? "Pause" : "Restart"}</Button>
+      </div>
+    </>
+  );
+};
 
 export default Timer;

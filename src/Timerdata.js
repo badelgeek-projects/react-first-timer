@@ -1,15 +1,15 @@
-import { Component } from "react";
 import { secondsToTime } from "./utils/time";
 import style from "./Style.module.css";
 
 const css = {
   table: {
-    color: "black",
+    color: "bisque",
     borderCollapse: "collapse",
     margin: "0 auto",
   },
   cell: {
-    border: "1px solid gray",
+    borderBottom: "1px solid chocolate",
+    backgroundColor: "tomato",
     padding: "2px 8px",
   },
 };
@@ -23,8 +23,8 @@ const formatTimer = (timer) => {
   );
 };
 
-class Timerdata extends Component {
-  displayTimerDatas() {
+const Timerdata = (props) => {
+  const displayTimerDatas = () => {
     return (
       <div className={style.center}>
         <table style={css.table}>
@@ -32,11 +32,11 @@ class Timerdata extends Component {
             <tr key="thead">
               <th style={css.cell}>Date</th>
               <th style={css.cell}>Timer</th>
-              <th style={{ ...css.cell, width: "25%" }}>State</th>
+              <th style={{ ...css.cell, width: "20%" }}>State</th>
             </tr>
           </thead>
           <tbody>
-            {this.props.timerDatas.map((timerData) => (
+            {props.timerDatas.map((timerData) => (
               <tr key={Math.random()}>
                 <td style={css.cell}>{timerData.date.toLocaleString()}</td>
                 <td style={css.cell}>{formatTimer(timerData.timer)}</td>
@@ -47,11 +47,9 @@ class Timerdata extends Component {
         </table>
       </div>
     );
-  }
+  };
 
-  render() {
-    return this.props.timerDatas.length ? this.displayTimerDatas() : null;
-  }
-}
+  return props.timerDatas.length ? displayTimerDatas() : null;
+};
 
 export default Timerdata;
